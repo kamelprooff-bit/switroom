@@ -1728,7 +1728,6 @@ function loadSettings() {
   const moon = $('icon-moon'); const sun = $('icon-sun');
   if (moon && sun) { moon.style.display = dark ? '' : 'none'; sun.style.display = dark ? 'none' : ''; }
   if ($('setting-dark')) $('setting-dark').checked = dark;
-  if (false) {
   const fs = localStorage.getItem('sw_fs') || '14';
   document.documentElement.style.setProperty('--msg-fs', fs + 'px');
   loadCustomize();
