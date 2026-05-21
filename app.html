@@ -423,7 +423,7 @@ a{color:var(--blue);text-decoration:none}
 .sb-settings-btn:hover{background:var(--sd-act);color:var(--txt)}
 
 /* ── CHAT AREA ── */
-.chat-area{flex:1;display:flex;flex-direction:column;background:var(--bg);overflow:hidden}
+.chat-area{flex:1;display:flex;flex-direction:column;background:var(--bg);overflow:hidden;position:relative}
 
 /* ── CHAT HEADER ── */
 .chat-hdr{
@@ -1380,37 +1380,104 @@ a{color:var(--blue);text-decoration:none}
   .mob-only{display:flex!important}
   .bottom-tabs{display:flex}
   .sb-nav{display:none}
-  .app{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
-  #home-page,.sidebar{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
-  .topnav{padding:0 10px}
+
+  /* Fix: padding-bottom for bottom tabs + safe area */
+  #app{padding-bottom:0}
+  #home-page{padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+  .sidebar{padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+
+  .topnav{padding:0 8px;gap:4px}
+  .nav-logo{font-size:13px}
+
+  /* Fix: sidebar slides from right (RTL) */
   .sidebar{
     position:fixed;inset:0;top:var(--hh);z-index:50;width:100vw;
-    transform:translateX(100%);border:none;
-    transition:transform .22s cubic-bezier(.4,0,.2,1);will-change:transform;
+    transform:translateX(105%);border:none;
+    transition:transform .26s cubic-bezier(.4,0,.2,1);will-change:transform;
+    box-shadow:none;
   }
-  .sidebar.mobile-open{transform:translateX(0)}
-  [data-lang=en] .sidebar{transform:translateX(-100%)}
+  .sidebar.mobile-open{transform:translateX(0);box-shadow:-8px 0 40px rgba(0,0,0,.2)}
+  [data-lang=en] .sidebar{transform:translateX(-105%)}
   [data-lang=en] .sidebar.mobile-open{transform:translateX(0)}
-  .chat-area{width:100vw;min-width:0}
-  .n-btn{width:42px;height:42px;min-width:42px}
+
+  /* Fix: chat area full width */
+  .chat-area{width:100vw;min-width:0;position:relative}
+
+  /* Fix: larger touch targets */
+  .n-btn{width:40px;height:40px;min-width:40px}
   .ibar-btn{width:40px;height:40px}
-  .send-btn{width:44px;height:44px;border-radius:14px}
-  .input-bar{padding:8px 10px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
-  .msgs-wrap{padding:10px 8px}
-  .msg-col{max-width:82%}
-  .bubble{font-size:14px;padding:8px 11px;border-radius:14px}
+  .send-btn{width:46px;height:46px;border-radius:14px;flex-shrink:0}
+
+  /* Fix: input bar above keyboard + safe area */
+  .input-bar{
+    padding:8px 10px;
+    padding-bottom:max(10px, env(safe-area-inset-bottom,0px));
+    position:sticky;bottom:0;
+  }
+
+  /* Fix: messages area accounts for bottom tabs */
+  .msgs-wrap{
+    padding:10px 8px;
+    padding-bottom:calc(10px + 56px + env(safe-area-inset-bottom,0px));
+  }
+
+  /* Fix: bubble sizing */
+  .msg-col{max-width:84%}
+  .bubble{font-size:14.5px;padding:9px 12px;border-radius:16px}
   .chat-hdr{padding:0 8px;gap:6px;min-width:0}
   .ch-name{font-size:14px}
-  .overlay{padding:0;align-items:flex-end}
-  .overlay .modal{border-radius:22px 22px 0 0;max-height:90vh;width:100%;margin:0;animation:slideUp .22s var(--ease-expo)}
-  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-  .modal{padding:20px 16px 28px}
+  .ch-actions .ch-btn{width:30px;height:30px}
+
+  /* Fix: modals slide up from bottom on mobile */
+  .overlay{padding:0;align-items:flex-end;background:rgba(0,0,0,.5)}
+  .overlay .modal{
+    border-radius:22px 22px 0 0;
+    max-height:88vh;width:100%;margin:0;
+    animation:slideUp .25s cubic-bezier(.16,1,.3,1);
+    padding-bottom:max(24px, env(safe-area-inset-bottom,0px));
+  }
+  @keyframes slideUp{from{opacity:.5;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
+  .modal{padding:20px 16px 24px}
+
+  /* Fix: home grid single column */
   .home-grid{grid-template-columns:1fr}
-  .home-body{padding:12px}
+  .home-body{padding:10px}
+
+  /* Fix: profile */
   .profile-banner{height:120px}
   .profile-big-av{width:64px;height:64px}
   .profile-name-big{font-size:17px}
+
+  /* Fix: notification panel full width */
   .notif-panel{right:4px;left:4px;width:auto;top:calc(var(--hh) + 4px)}
+
+  /* Fix: emoji picker above keyboard */
+  .emoji-picker{bottom:auto;top:auto;right:4px;left:4px;width:auto;
+    position:fixed;bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+
+  /* Fix: context menu centered on mobile (not positional) */
+  .ctx-menu{position:fixed!important;left:50%!important;top:50%!important;
+    transform:translate(-50%,-50%)!important;width:min(260px,88vw)}
+
+  /* Fix: room items bigger tap area */
+  .room-item{padding:12px 10px;min-height:58px}
+  .friend-item{padding:11px 14px;min-height:54px}
+
+  /* Fix: auth card full width on small phones */
+  .a-card{width:min(360px,94vw);padding:24px 20px}
+
+  /* Fix: home nav tabs */
+  .home-nav-tabs{display:none}
+
+  /* Fix: profile page safe area */
+  #profile-page{padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+
+  /* Fix: prevent text selection on bubbles on mobile (long press = context menu) */
+  .bubble{-webkit-user-select:none;user-select:none}
+  .bubble:focus{-webkit-user-select:text;user-select:text}
+  
+  /* Fix: hide some nav buttons on very small screens */
+  .ch-actions .ch-btn:nth-child(n+3){display:none}
 }
 </style>
 </head>
@@ -1665,6 +1732,28 @@ a{color:var(--blue);text-decoration:none}
       <!-- Messages -->
       <div class="msgs-wrap" id="messages">
         <div style="padding:60px 0"><div class="spin"></div></div>
+      </div>
+
+      <!-- Scroll to bottom FAB -->
+      <div id="scroll-fab" style="
+        position:absolute;bottom:80px;left:16px;
+        width:40px;height:40px;border-radius:50%;
+        background:var(--surface);border:1px solid var(--brd);
+        box-shadow:0 4px 16px rgba(0,0,0,.15);
+        display:none;align-items:center;justify-content:center;
+        cursor:pointer;z-index:10;
+        transition:all .25s cubic-bezier(.34,1.56,.64,1);
+        color:var(--txt2);
+      " onclick="forceScrollBottom()" title="انتقل للأسفل">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span id="scroll-fab-badge" style="
+          position:absolute;top:-4px;right:-4px;
+          background:var(--red-brand);color:#fff;
+          font-size:9px;font-weight:700;
+          min-width:16px;height:16px;border-radius:8px;
+          display:none;align-items:center;justify-content:center;
+          padding:0 4px;font-family:var(--mono);
+        ">0</span>
       </div>
 
       <!-- Input Bar -->
@@ -2301,20 +2390,54 @@ create policy "storage_del" on storage.objects for delete using (bucket_id='chat
 
 <!-- ══ INVITE MODAL ══ -->
 <div class="overlay" id="modal-invite">
-  <div class="modal">
+  <div class="modal" style="max-width:360px">
     <div class="modal-title">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-      دعوة إلى الغرفة الخاصة
+      دعوة إلى الغرفة
     </div>
-    <div class="invite-code-box" id="invite-code-display">
-      <div class="invite-code-label">رمز الدعوة</div>
-      <div class="invite-code-num" id="invite-code-num">------</div>
-      <div class="invite-code-label">أرسل هذا الرمز للشخص الذي تريد دعوته</div>
-      <button class="btn-confirm" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="copyInviteCode()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> نسخ الرمز</button>
+
+    <!-- Room info -->
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border-radius:12px;border:1px solid var(--brd)">
+      <div id="inv-room-av" style="width:40px;height:40px;border-radius:11px;background:#1E3A5F;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0"></div>
+      <div>
+        <div id="inv-room-name" style="font-size:14px;font-weight:800;color:var(--txt)"></div>
+        <div style="font-size:11px;color:var(--txt3);margin-top:2px">غرفة خاصة · بالدعوة فقط</div>
+      </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal('modal-invite')">إغلاق</button>
-      <button class="btn-confirm" onclick="regenerateInvite()">🔄 رمز جديد</button>
+
+    <!-- Code display -->
+    <div class="invite-code-box" id="invite-code-display" onclick="copyInviteCode()" title="اضغط للنسخ" style="cursor:pointer;transition:all .2s">
+      <div class="invite-code-label" style="display:flex;align-items:center;gap:5px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        رمز الدعوة السري
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:6px 0">
+        <div class="invite-code-num" id="invite-code-num" style="font-size:32px;letter-spacing:10px">------</div>
+        <div id="inv-copy-check" style="color:var(--green);opacity:0;transition:opacity .3s;flex-shrink:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+      <div class="invite-code-label">اضغط على الرمز لنسخه فوراً</div>
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn-confirm" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px" onclick="copyInviteCode()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="15" height="15"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        نسخ رمز الدعوة
+      </button>
+      <button class="btn-confirm" id="inv-share-btn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1a73e8,#0d47a1)" onclick="shareInviteCode()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="15" height="15"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        مشاركة الرمز
+      </button>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid var(--brd);margin-top:2px">
+      <button class="btn-cancel" style="flex:1" onclick="closeModal('modal-invite')">إغلاق</button>
+      <button class="btn-cancel" style="display:flex;align-items:center;gap:5px;font-size:12px" onclick="regenerateInvite()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        رمز جديد
+      </button>
     </div>
   </div>
 </div>
@@ -2329,7 +2452,7 @@ create policy "storage_del" on storage.objects for delete using (bucket_id='chat
     <div>
       <div class="field-label">رمز الدعوة</div>
       <div class="invite-join-input">
-        <input class="field-input ltr" id="join-code-input" type="text" placeholder="أدخل الرمز..." maxlength="6" style="text-align:center;font-family:'Space Mono',monospace;font-size:22px;letter-spacing:6px" oninput="this.value=this.value.toUpperCase()">
+        <input class="field-input ltr" id="join-code-input" type="text" placeholder="أدخل الرمز..." maxlength="6" style="text-align:center;font-family:var(--mono);font-size:22px;letter-spacing:6px" oninput="this.value=this.value.toUpperCase()">
       </div>
       <div style="font-size:11px;color:var(--txt3);margin-top:6px;text-align:center">أدخل رمز الدعوة المكون من 6 أحرف/أرقام</div>
     </div>
@@ -2637,8 +2760,9 @@ function openSettingsModal() { closePdrop(); showModal('modal-settings'); }
 
 /* ─── ROOMS ─── */
 async function loadRooms() {
+  $('rooms-list').innerHTML = '<div style="display:flex;justify-content:center;padding:32px"><div class="spin"></div></div>';
   const { data, error } = await SB.from('rooms').select('*, messages(content, image_url, created_at)').order('created_at', { ascending: false });
-  if (error) { $('rooms-list').innerHTML = `<div style="padding:16px;color:var(--red);font-size:12px">خطأ في تحميل الغرف</div>`; return; }
+  if (error) { $('rooms-list').innerHTML = `<div style="padding:16px;text-align:center;color:var(--red);font-size:12px">⚠️ خطأ في تحميل الغرف<br><span style="color:var(--txt3)">${error.message}</span></div>`; return; }
   ALL_ROOMS = data || [];
   // Cache DM partner names
   if (!ALL_ROOMS._dmNames) ALL_ROOMS._dmNames = {};
@@ -2709,7 +2833,10 @@ async function selectRoom(id) {
   $('ch-status').innerHTML = `<span class="live-dot"></span>${statusText}`;
   // Show invite button only for private rooms
   const invBtn = $('ch-invite-btn');
-  if (invBtn) invBtn.style.display = room.room_type === 'private' ? 'flex' : 'none';
+  if (invBtn) {
+    invBtn.style.display = 'flex';
+    invBtn.title = room.room_type === 'private' ? 'دعوة بالرمز' : 'مشاركة الغرفة';
+  }
   // Apply saved customization
   const saved = localStorage.getItem('rc_' + id);
   const chAv = $('ch-avatar');
@@ -3064,9 +3191,25 @@ function buildCtxReacts() {
 }
 function closeCtxMenu() { const m = $('ctx-menu'); m.classList.remove('show'); m.style.transform = ''; $('ctx-reacts').innerHTML = ''; }
 function ctxAction(action) {
-  if (action === 'copy') { const m = ALL_MSGS.find(x => x.id === CTX_ID); if (m?.content) navigator.clipboard.writeText(m.content); toast('تم النسخ'); }
+  if (action === 'copy') {
+    const m = ALL_MSGS.find(x => x.id === CTX_ID);
+    if (m?.content) {
+      navigator.clipboard.writeText(m.content).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = m.content; ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+      });
+      toast('✓ تم نسخ الرسالة');
+    }
+  }
   else if (action === 'reply') { const m = ALL_MSGS.find(x => x.id === CTX_ID); if (m) setReply(m); }
-  else if (action === 'delete') { SB.from('messages').delete().eq('id', CTX_ID); }
+  else if (action === 'delete') {
+    if (!confirm('هل تريد حذف هذه الرسالة؟')) { closeCtxMenu(); return; }
+    await SB.from('messages').delete().eq('id', CTX_ID);
+    removeMessage(CTX_ID);
+    toast('تم حذف الرسالة');
+  }
   closeCtxMenu();
 }
 
@@ -3307,7 +3450,18 @@ function buildEmojiPicker() {
 function showEmojiCat(cat, btn) { document.querySelectorAll('.ep-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active'); showEmojiGrid(cat); }
 function showEmojiGrid(cat) { $('ep-grid').innerHTML = (EMOJIS[cat] || []).map(e => `<button class="ep-btn" onclick="insertEmoji('${e}')">${e}</button>`).join(''); }
 function insertEmoji(e) { const i = $('msg-input'); i.value += e; i.focus(); }
-function toggleEmoji() { $('emoji-picker').classList.toggle('show'); }
+function toggleEmoji() {
+  const picker = $('emoji-picker');
+  picker.classList.toggle('show');
+  if (window.innerWidth <= 600 && picker.classList.contains('show')) {
+    const vvh = window.visualViewport?.height || window.innerHeight;
+    picker.style.bottom = (window.innerHeight - vvh + 68) + 'px';
+    picker.style.top = 'auto';
+    picker.style.left = '4px';
+    picker.style.right = '4px';
+    picker.style.width = 'auto';
+  }
+}
 function closeEmoji() { $('emoji-picker').classList.remove('show'); }
 
 /* ─── NOTIFICATIONS ─── */
@@ -3713,14 +3867,69 @@ function openInviteModal() {
   const saved = localStorage.getItem('inv_' + ROOM.id) || generateInviteCode();
   localStorage.setItem('inv_' + ROOM.id, saved);
   $('invite-code-num').textContent = saved;
+  // Fill room info
+  const av = $('inv-room-av');
+  const nm = $('inv-room-name');
+  if (av) { av.textContent = ROOM.name?.[0]?.toUpperCase() || '?'; av.style.background = colorFor(ROOM.id); }
+  if (nm) nm.textContent = ROOM.name || 'الغرفة';
+  // Reset copy check
+  const chk = $('inv-copy-check');
+  if (chk) chk.style.opacity = '0';
+  // Show/hide share button
+  const shareBtn = $('inv-share-btn');
+  if (shareBtn) shareBtn.style.display = navigator.share ? 'flex' : 'none';
   showModal('modal-invite');
 }
-function copyInviteCode() { navigator.clipboard.writeText($('invite-code-num').textContent); toast('✓ تم نسخ رمز الدعوة'); }
+function copyInviteCode() {
+  const code = $('invite-code-num').textContent;
+  if (!code || code === '------') return;
+  navigator.clipboard.writeText(code).then(() => {
+    toast('✓ تم نسخ رمز الدعوة: ' + code);
+    // Show checkmark animation
+    const chk = $('inv-copy-check');
+    if (chk) { chk.style.opacity = '1'; setTimeout(() => chk.style.opacity = '0', 2000); }
+    // Animate the code box
+    const box = $('invite-code-display');
+    if (box) {
+      box.style.borderColor = 'var(--green)';
+      box.style.background = 'rgba(34,197,94,.06)';
+      setTimeout(() => { box.style.borderColor = ''; box.style.background = ''; }, 1500);
+    }
+  }).catch(() => {
+    // Fallback for browsers without clipboard API
+    const ta = document.createElement('textarea');
+    ta.value = code; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('✓ تم نسخ رمز الدعوة: ' + code);
+  });
+}
+async function shareInviteCode() {
+  const code = $('invite-code-num').textContent;
+  const roomName = ROOM?.name || 'غرفة';
+  if (!code || code === '------') return;
+  const shareData = {
+    title: 'Grouba — دعوة للانضمام',
+    text: `انضم إلى غرفة "${roomName}" على Grouba!\nرمز الدعوة: ${code}\n\nافتح التطبيق واضغط "انضمام بالرمز" وأدخل الرمز.`,
+  };
+  try {
+    if (navigator.share && navigator.canShare(shareData)) {
+      await navigator.share(shareData);
+    } else {
+      copyInviteCode();
+    }
+  } catch (e) {
+    if (e.name !== 'AbortError') copyInviteCode();
+  }
+}
 function regenerateInvite() {
   if (!ROOM) return;
   const code = generateInviteCode();
   localStorage.setItem('inv_' + ROOM.id, code);
   $('invite-code-num').textContent = code;
+  const chk = $('inv-copy-check');
+  if (chk) chk.style.opacity = '0';
   toast('✓ تم إنشاء رمز جديد');
 }
 function openJoinRoomModal() { $('join-code-input').value = ''; showModal('modal-join-room'); setTimeout(() => $('join-code-input').focus(), 120); }
@@ -3829,7 +4038,12 @@ function playBeep() {
 /* ─── INPUT ─── */
 function onInputKeydown(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
-function scrollBottom() { const c = $('messages'); setTimeout(() => c.scrollTop = c.scrollHeight, 60); }
+function scrollBottom() {
+  const c = $('messages');
+  if (!c) return;
+  const nearBottom = c.scrollHeight - c.scrollTop - c.clientHeight < 220;
+  if (nearBottom) requestAnimationFrame(() => { c.scrollTop = c.scrollHeight; });
+}
 
 /* ─── PROFILE DROPDOWN ─── */
 function togglePdrop() { $('pdrop').classList.toggle('open'); }
@@ -3903,9 +4117,166 @@ document.addEventListener('keydown', e => {
 /* ─── BOOT ─── */
 boot();
 
-/* ─── UI ENHANCEMENTS (matching landing page style) ─── */
-// Ripple effect on send button
-document.addEventListener('click', e => {
+/* ════════════════════════════════════
+   UX & COMPATIBILITY FIXES
+════════════════════════════════════ */
+
+// ── 1. VIRTUAL KEYBOARD FIX (mobile)
+// When keyboard opens, shrink the app height so input stays visible
+if (window.visualViewport) {
+  let lastVH = window.visualViewport.height;
+  window.visualViewport.addEventListener('resize', () => {
+    const vh = window.visualViewport.height;
+    const app = document.getElementById('app');
+    if (app) app.style.height = vh + 'px';
+    // Scroll to bottom when keyboard opens
+    if (vh < lastVH - 100) scrollBottom();
+    lastVH = vh;
+  });
+}
+
+// ── 2. CLICK-OUTSIDE CLOSES SIDEBAR on mobile
+document.getElementById('chat-area')?.addEventListener('click', () => {
+  if (window.innerWidth <= 600) closeSidebar();
+});
+
+// ── 3. SWIPE RIGHT TO OPEN SIDEBAR / SWIPE LEFT TO CLOSE (mobile)
+(function() {
+  let startX = 0, startY = 0, dragging = false;
+  const THRESHOLD = 60, EDGE = 28;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    dragging = true;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (!dragging || window.innerWidth > 600) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = Math.abs(e.changedTouches[0].clientY - startY);
+    if (dy > 60) return; // vertical scroll — ignore
+    const sb = document.getElementById('sidebar');
+    const isOpen = sb?.classList.contains('mobile-open');
+    // RTL: swipe left (negative dx) to open, swipe right to close
+    if (!isOpen && startX >= window.innerWidth - EDGE && dx < -THRESHOLD) {
+      toggleSidebar();
+    } else if (isOpen && dx > THRESHOLD) {
+      closeSidebar();
+    }
+    dragging = false;
+  }, { passive: true });
+})();
+
+// ── SCROLL TO BOTTOM FAB
+let _unreadScrollCount = 0;
+function forceScrollBottom() {
+  const c = document.getElementById('messages');
+  if (c) { c.scrollTop = c.scrollHeight; }
+  _unreadScrollCount = 0;
+  const fab = document.getElementById('scroll-fab');
+  const badge = document.getElementById('scroll-fab-badge');
+  if (fab) fab.style.display = 'none';
+  if (badge) { badge.style.display = 'none'; badge.textContent = '0'; }
+}
+(function initScrollFab() {
+  const c = document.getElementById('messages');
+  const fab = document.getElementById('scroll-fab');
+  const badge = document.getElementById('scroll-fab-badge');
+  if (!c || !fab) return;
+  c.addEventListener('scroll', () => {
+    const distFromBottom = c.scrollHeight - c.scrollTop - c.clientHeight;
+    const showFab = distFromBottom > 200;
+    fab.style.display = showFab ? 'flex' : 'none';
+    if (!showFab) {
+      _unreadScrollCount = 0;
+      if (badge) { badge.style.display = 'none'; badge.textContent = '0'; }
+    }
+  });
+  // Override scrollBottom to track unread when user scrolled up
+  const _sb = window.scrollBottom;
+  window.scrollBottom = function() {
+    const msgs = document.getElementById('messages');
+    if (!msgs) return;
+    const distFromBottom = msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight;
+    if (distFromBottom > 200) {
+      // User scrolled up — show badge instead
+      _unreadScrollCount++;
+      if (badge) {
+        badge.textContent = _unreadScrollCount > 9 ? '9+' : _unreadScrollCount;
+        badge.style.display = 'flex';
+      }
+      fab.style.display = 'flex';
+    } else {
+      requestAnimationFrame(() => { msgs.scrollTop = msgs.scrollHeight; });
+    }
+  };
+})();
+
+
+window.addEventListener('offline', () => {
+  toast('⚠️ انقطع الاتصال بالإنترنت');
+});
+window.addEventListener('online', () => {
+  toast('✅ عاد الاتصال بالإنترنت');
+});
+function toast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── 6. DOUBLE-TAP PREVENTION on buttons
+document.querySelectorAll('button, .btn-primary, .btn-confirm').forEach(btn => {
+  let lastTap = 0;
+  btn.addEventListener('touchend', e => {
+    const now = Date.now();
+    if (now - lastTap < 300) e.preventDefault();
+    lastTap = now;
+  });
+});
+
+// ── 7. INPUT DIRECTION AUTO-DETECT (Arabic/English)
+const msgInput = document.getElementById('msg-input');
+if (msgInput) {
+  msgInput.addEventListener('input', function() {
+    const text = this.value;
+    if (!text) { this.dir = 'rtl'; return; }
+    const firstChar = text.trimStart()[0];
+    const isArabic = firstChar && /[\u0600-\u06FF]/.test(firstChar);
+    this.dir = isArabic ? 'rtl' : 'ltr';
+  });
+}
+
+// ── 8. PREVENT PULL-TO-REFRESH on messages area
+const messagesEl = document.getElementById('messages');
+if (messagesEl) {
+  messagesEl.addEventListener('touchmove', e => {
+    if (messagesEl.scrollTop === 0 && e.touches[0].clientY > 0) {
+      // only prevent when at top and pulling down
+    }
+  }, { passive: true });
+}
+
+// ── 9. AUTH: show/hide password toggle
+(function addPasswordToggle() {
+  const passInput = document.getElementById('inp-pass');
+  if (!passInput) return;
+  const wrap = passInput.parentElement;
+  if (!wrap) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.style.cssText = 'position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--txt3);padding:4px;display:flex;align-items:center';
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  if (getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
+  wrap.appendChild(btn);
+  btn.addEventListener('click', () => {
+    passInput.type = passInput.type === 'password' ? 'text' : 'password';
+    btn.style.color = passInput.type === 'text' ? 'var(--red-brand)' : 'var(--txt3)';
+  });
+})();
+
+
   const btn = e.target.closest('.send-btn, .btn-confirm, .btn-signin, .nr-btn');
   if (!btn) return;
   const r = document.createElement('span');
