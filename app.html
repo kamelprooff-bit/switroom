@@ -3034,7 +3034,7 @@ async function refreshReactions(msgId) {
 let POLL_TIMER = null;
 let LAST_MSG_TIME = null;
 
-function subscribeRoom(roomId) {
+async function subscribeRoom(roomId) {
   if (MSG_CHAN) SB.removeChannel(MSG_CHAN);
   if (TYP_CHAN) SB.removeChannel(TYP_CHAN);
   if (POLL_TIMER) { clearInterval(POLL_TIMER); POLL_TIMER = null; }
@@ -3190,7 +3190,7 @@ function buildCtxReacts() {
   QUICK_REACTS.forEach(em => { const b = document.createElement('button'); b.className = 'ctx-react-btn'; b.textContent = em; b.onclick = () => quickReact(em); bar.appendChild(b); });
 }
 function closeCtxMenu() { const m = $('ctx-menu'); m.classList.remove('show'); m.style.transform = ''; $('ctx-reacts').innerHTML = ''; }
-function ctxAction(action) {
+async function ctxAction(action) {
   if (action === 'copy') {
     const m = ALL_MSGS.find(x => x.id === CTX_ID);
     if (m?.content) {
