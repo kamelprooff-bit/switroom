@@ -4277,6 +4277,8 @@ if (messagesEl) {
 })();
 
 
+// Ripple effect on buttons
+document.addEventListener('click', e => {
   const btn = e.target.closest('.send-btn, .btn-confirm, .btn-signin, .nr-btn');
   if (!btn) return;
   const r = document.createElement('span');
@@ -4331,11 +4333,11 @@ if (msgsWrap) {
 }
 
 // Input pulse animation
-const msgInput = document.getElementById('msg-input');
 const sendBtn = document.getElementById('send-button');
-if (msgInput && sendBtn) {
-  msgInput.addEventListener('input', () => {
-    if (msgInput.value.trim()) {
+const _mi = document.getElementById('msg-input');
+if (_mi && sendBtn) {
+  _mi.addEventListener('input', () => {
+    if (_mi.value.trim()) {
       sendBtn.classList.add('has-text');
     } else {
       sendBtn.classList.remove('has-text');
